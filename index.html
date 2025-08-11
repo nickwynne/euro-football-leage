@@ -45,80 +45,153 @@ h1{margin:0;font-size:28px;color:var(--accent)}
   </section>
 </main>
 <script>
-const data = {
-  "leagues_points": {
-    "Real Betis": 34, "Mainz 05": 22, "Atalanta": 41, "Paris Saint Germain": 52,
-    "Villarreal": 30, "Bayern Munich": 60, "AS Roma": 38, "Lyon": 29,
-    "Barcelona": 58, "RB Leipzig": 48, "Bologna": 21, "Monaco": 36,
-    "Real Madrid": 65, "FC Koln": 20, "Fiorentina": 26, "Marseille": 33,
-    "Alaves": 18, "Bayern Leverkusen": 46, "AC Milan": 44, "Brest": 17,
-    "Athletico Madrid": 42, "Eintracht Frankfurt": 35, "Inter Milan": 50, "Lens": 28,
-    "Athletic Bilbao": 25, "SC Freiburg": 31, "Napoli": 57, "Nice": 24,
-    "Valencia": 27, "Borussia Dortmund": 54, "Juventus": 39, "Strasbourg": 19,
-    "Real Sociedad": 32, "Vfb Stuttgart": 23, "Lazio": 37, "Lille": 26,
-    "Vfb Strasbourg": 19, "Sevilla": 34, "Como": 12, "Vfl Wolfsburg": 29,
-    "Celta Vigo": 20, "Eintract Frankfurt": 35
+const API_KEY = 'fa19251211aa41cbbc11f567247ebf9a';
+
+// League codes from football-data.org
+const leagueCodes = ['SA', 'PD', 'BL1', 'FL1'];
+
+const divisions = [
+  {
+    name: "It’s Called Soccer",
+    teams: [
+      {manager:"Portillo", clubs:["Real Betis","Mainz 05","Atalanta","Paris Saint Germain"]},
+      {manager:"Nick", clubs:["Villarreal","Bayern Munich","AS Roma","Lyon"]},
+      {manager:"Tim", clubs:["Barcelona","RB Leipzig","Bologna","Monaco"]},
+      {manager:"Dave", clubs:["Real Madrid","FC Koln","Fiorentina","Marseille"]},
+      {manager:"Tara", clubs:["Alaves","Bayern Leverkusen","AC Milan","Brest"]},
+      {manager:"Chewy", clubs:["Athletico Madrid","Eintracht Frankfurt","Inter Milan","Lens"]},
+      {manager:"Dallin", clubs:["Athletic Bilbao","SC Freiburg","Napoli","Nice"]},
+      {manager:"Salas", clubs:["Valencia","Borussia Dortmund","Juventus","Strasbourg"]},
+      {manager:"Austin", clubs:["Real Sociedad","Vfb Stuttgart","Lazio","Lille"]}
+    ]
   },
-  "divisions": [
-    {
-      "name": "It’s Called Soccer",
-      "teams": [
-        {"manager":"Portillo","clubs":["Real Betis","Mainz 05","Atalanta","Paris Saint Germain"],"record":{"W":8,"D":1,"L":6}},
-        {"manager":"Nick","clubs":["Villarreal","Bayern Munich","AS Roma","Lyon"],"record":{"W":8,"D":5,"L":1}},
-        {"manager":"Tim","clubs":["Barcelona","RB Leipzig","Bologna","Monaco"],"record":{"W":10,"D":2,"L":3}},
-        {"manager":"Dave","clubs":["Real Madrid","FC Koln","Fiorentina","Marseille"],"record":{"W":7,"D":5,"L":3}},
-        {"manager":"Tara","clubs":["Alaves","Bayern Leverkusen","AC Milan","Brest"],"record":{"W":7,"D":1,"L":7}},
-        {"manager":"Chewy","clubs":["Athletico Madrid","Eintracht Frankfurt","Inter Milan","Lens"],"record":{"W":10,"D":2,"L":3}},
-        {"manager":"Dallin","clubs":["Athletic Bilbao","SC Freiburg","Napoli","Nice"],"record":{"W":8,"D":4,"L":3}},
-        {"manager":"Salas","clubs":["Valencia","Borussia Dortmund","Juventus","Strasbourg"],"record":{"W":10,"D":3,"L":2}},
-        {"manager":"Austin","clubs":["Real Sociedad","Vfb Stuttgart","Lazio","Lille"],"record":{"W":8,"D":2,"L":5}}
-      ]
-    },
-    {
-      "name": "It’s Called Football",
-      "teams": [
-        {"manager":"Andy","clubs":["Villarreal","Vfb Strasbourg","Atalanta","Paris Saint Germain"],"record":{"W":9,"D":1,"L":5}},
-        {"manager":"Darwin","clubs":["Sevilla","Bayern Munich","Roma","Strasbourg"],"record":{"W":6,"D":1,"L":8}},
-        {"manager":"Tillah","clubs":["Barcelona","RB Leipzig","Como","Marseille"],"record":{"W":10,"D":1,"L":4}},
-        {"manager":"Layton","clubs":["Athletico Madrid","Bayern Leverkusen","Lazio","Nice"],"record":{"W":7,"D":4,"L":4}},
-        {"manager":"Marcus","clubs":["Real Betis","Vfl Wolfsburg","Napoli","Monaco"],"record":{"W":10,"D":3,"L":2}},
-        {"manager":"Anthony","clubs":["Real Madrid","SC Freiburg","AC Milan","Lille"],"record":{"W":6,"D":1,"L":8}},
-        {"manager":"Danvir","clubs":["Athletic Bilbao","Mainz 05","Inter Milan","Brest"],"record":{"W":9,"D":5,"L":1}},
-        {"manager":"Neil","clubs":["Real Sociedad","Borussia Dortmund","Fiorentina","Lyon"],"record":{"W":8,"D":5,"L":2}},
-        {"manager":"Francisco","clubs":["Celta Vigo","Eintract Frankfurt","Juventus","Lens"],"record":{"W":7,"D":5,"L":3}}
-      ]
-    }
-  ]
+  {
+    name: "It’s Called Football",
+    teams: [
+      {manager:"Andy", clubs:["Villarreal","Vfb Strasbourg","Atalanta","Paris Saint Germain"]},
+      {manager:"Darwin", clubs:["Sevilla","Bayern Munich","Roma","Strasbourg"]},
+      {manager:"Tillah", clubs:["Barcelona","RB Leipzig","Como","Marseille"]},
+      {manager:"Layton", clubs:["Athletico Madrid","Bayern Leverkusen","Lazio","Nice"]},
+      {manager:"Marcus", clubs:["Real Betis","Vfl Wolfsburg","Napoli","Monaco"]},
+      {manager:"Anthony", clubs:["Real Madrid","SC Freiburg","AC Milan","Lille"]},
+      {manager:"Danvir", clubs:["Athletic Bilbao","Mainz 05","Inter Milan","Brest"]},
+      {manager:"Neil", clubs:["Real Sociedad","Borussia Dortmund","Fiorentina","Lyon"]},
+      {manager:"Francisco", clubs:["Celta Vigo","Eintract Frankfurt","Juventus","Lens"]}
+    ]
+  }
+];
+
+// Mapping to normalize club names from your lists to the API's returned names
+// (You may need to adjust this based on exact API names)
+const clubNameMap = {
+  "Real Betis": "Real Betis Balompié",
+  "Mainz 05": "1. FSV Mainz 05",
+  "Atalanta": "Atalanta BC",
+  "Paris Saint Germain": "Paris Saint-Germain",
+  "Villarreal": "Villarreal CF",
+  "Bayern Munich": "FC Bayern München",
+  "AS Roma": "AS Roma",
+  "Lyon": "Olympique Lyonnais",
+  "Barcelona": "FC Barcelona",
+  "RB Leipzig": "RB Leipzig",
+  "Bologna": "Bologna FC 1909",
+  "Monaco": "AS Monaco",
+  "Real Madrid": "Real Madrid CF",
+  "FC Koln": "1. FC Köln",
+  "Fiorentina": "ACF Fiorentina",
+  "Marseille": "Olympique de Marseille",
+  "Alaves": "Deportivo Alavés",
+  "Bayern Leverkusen": "Bayer 04 Leverkusen",
+  "AC Milan": "AC Milan",
+  "Brest": "Stade Brestois 29",
+  "Athletico Madrid": "Atlético Madrid",
+  "Eintracht Frankfurt": "Eintracht Frankfurt",
+  "Inter Milan": "FC Internazionale Milano",
+  "Lens": "RC Lens",
+  "Athletic Bilbao": "Athletic Club",
+  "SC Freiburg": "SC Freiburg",
+  "Napoli": "Napoli",
+  "Nice": "OGC Nice",
+  "Valencia": "Valencia CF",
+  "Borussia Dortmund": "Borussia Dortmund",
+  "Juventus": "Juventus FC",
+  "Strasbourg": "RC Strasbourg Alsace",
+  "Real Sociedad": "Real Sociedad",
+  "Vfb Stuttgart": "VfB Stuttgart",
+  "Lazio": "SS Lazio",
+  "Lille": "LOSC Lille",
+  "Vfb Strasbourg": "RC Strasbourg Alsace",
+  "Sevilla": "Sevilla FC",
+  "Como": "Como 1907",
+  "Vfl Wolfsburg": "VfL Wolfsburg",
+  "Celta Vigo": "RC Celta de Vigo",
+  "Eintract Frankfurt": "Eintracht Frankfurt"
 };
 
-function render() {
+async function fetchLeagueStandings(leagueCode) {
+  const url = `https://api.football-data.org/v4/competitions/${leagueCode}/standings`;
+  const res = await fetch(url, {
+    headers: { 'X-Auth-Token': API_KEY }
+  });
+  if (!res.ok) {
+    throw new Error(`Failed to fetch ${leagueCode} standings: ${res.statusText}`);
+  }
+  const data = await res.json();
+  // Assume standings are in data.standings[0].table for current season
+  return data.standings[0].table;
+}
+
+async function getAllStandings() {
+  const allStandings = {};
+  for (const code of leagueCodes) {
+    try {
+      const table = await fetchLeagueStandings(code);
+      table.forEach(team => {
+        allStandings[team.team.name] = team.points;
+      });
+    } catch (e) {
+      console.error(e);
+      alert(`Error fetching ${code} data: ${e.message}`);
+    }
+  }
+  return allStandings;
+}
+
+function renderStandings(standingsPoints) {
   const boards = document.getElementById('boards');
   boards.innerHTML = '';
-  data.divisions.forEach(div => {
+
+  divisions.forEach(div => {
     const board = document.createElement('div');
     board.className = 'board';
+
     const h = document.createElement('h2');
     h.textContent = div.name;
     board.appendChild(h);
 
     const rows = div.teams.map(t => {
-      const clubPoints = t.clubs.map(c => ({name:c, pts: data.leagues_points[c] || 0}));
-      const total = clubPoints.reduce((s,x) => s+x.pts, 0);
-      return {...t, clubPoints, total};
+      // Map clubs to API names and get points
+      const clubPoints = t.clubs.map(c => {
+        const apiName = clubNameMap[c] || c;
+        return { name: c, pts: standingsPoints[apiName] ?? 0 };
+      });
+      const total = clubPoints.reduce((sum, c) => sum + c.pts, 0);
+      return { ...t, clubPoints, total };
     });
 
     rows.sort((a,b) => b.total - a.total);
 
     const tbl = document.createElement('table');
     tbl.className = 'table';
-    tbl.innerHTML = `<thead><tr><th>#</th><th>Manager</th><th>Clubs</th><th>Record (W-D-L)</th><th style="text-align:right">Total pts</th></tr></thead>`;
+    tbl.innerHTML = `<thead><tr><th>#</th><th>Manager</th><th>Clubs</th><th style="text-align:right">Total pts</th></tr></thead>`;
     const tbody = document.createElement('tbody');
 
     rows.forEach((r,i) => {
-      const clubsHtml = r.clubPoints.map(cp => `<div class="club">${cp.name} <span class="small">(${cp.pts} pts)</span></div>`).join('');
-      const record = r.record ? `${r.record.W}-${r.record.D}-${r.record.L}` : '-';
+      const clubsHtml = r.clubPoints.map(cp => 
+        `<div class="club">${cp.name} <span class="small">(${cp.pts} pts)</span></div>`
+      ).join('');
       const tr = document.createElement('tr');
-      tr.innerHTML = `<td>${i+1}</td><td class="manager">${r.manager}</td><td class="club-list">${clubsHtml}</td><td class="record">${record}</td><td class="total">${r.total}</td>`;
+      tr.innerHTML = `<td>${i+1}</td><td class="manager">${r.manager}</td><td class="club-list">${clubsHtml}</td><td class="total">${r.total}</td>`;
       tbody.appendChild(tr);
     });
 
@@ -128,7 +201,11 @@ function render() {
   });
 }
 
-render();
+// On page load fetch data and render
+(async function(){
+  const livePoints = await getAllStandings();
+  renderStandings(livePoints);
+})();
 </script>
 </body>
 </html>
