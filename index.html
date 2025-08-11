@@ -1,0 +1,134 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>European Fantasy League Standings - Demo Full Data</title>
+<style>
+:root{--bg:#0f1724;--card:#071033;--accent:#f3b23a;--muted:#94a3b8;color-scheme:dark}
+*{box-sizing:border-box}
+body{font-family:Inter,system-ui,Segoe UI,Roboto,'Helvetica Neue',Arial;background:linear-gradient(180deg,#071024 0%, #0b1630 100%);color:#e6eef8;margin:0;padding:28px}
+header{display:flex;flex-direction:column;gap:6px;margin-bottom:18px}
+h1{margin:0;font-size:28px;color:var(--accent)}
+.subtitle{margin:0;color:var(--muted)}
+.boards{display:flex;flex-wrap:wrap;gap:18px}
+.board{background:rgba(255,255,255,0.03);border-radius:10px;padding:12px;width:620px;min-width:320px}
+.board h2{margin:0 0 8px 0}
+.table{width:100%;border-collapse:collapse}
+.table th,.table td{padding:6px 8px;text-align:left;font-size:14px}
+.table th{color:var(--muted);font-weight:600;border-bottom:1px solid rgba(255,255,255,0.04)}
+.manager{font-weight:700}
+.small{font-size:12px;color:var(--muted)}
+.club-list{font-size:13px;color:#cfe2ff}
+.total{font-weight:800;text-align:right}
+.record{font-weight:600;text-align:center;color:#f3b23a}
+.notes{margin-top:18px;color:var(--muted)}
+#notes{margin-top:20px}
+.club {margin-bottom:2px}
+</style>
+</head>
+<body>
+<header>
+  <h1>European Fantasy League</h1>
+  <p class="subtitle">Demo Standings with Full Team Data and Records</p>
+</header>
+<main>
+  <div id="boards" class="boards"></div>
+  <section id="notes">
+    <h3>Notes</h3>
+    <ul>
+      <li>Points and records are demo values baked directly into the page.</li>
+      <li>Each fantasy team has 4 clubs; total points are summed from club points.</li>
+      <li>Records (W-D-L) are randomly generated for demonstration.</li>
+      <li>Ready to connect to live API with backend in next steps.</li>
+    </ul>
+  </section>
+</main>
+<script>
+const data = {
+  "leagues_points": {
+    "Real Betis": 34, "Mainz 05": 22, "Atalanta": 41, "Paris Saint Germain": 52,
+    "Villarreal": 30, "Bayern Munich": 60, "AS Roma": 38, "Lyon": 29,
+    "Barcelona": 58, "RB Leipzig": 48, "Bologna": 21, "Monaco": 36,
+    "Real Madrid": 65, "FC Koln": 20, "Fiorentina": 26, "Marseille": 33,
+    "Alaves": 18, "Bayern Leverkusen": 46, "AC Milan": 44, "Brest": 17,
+    "Athletico Madrid": 42, "Eintracht Frankfurt": 35, "Inter Milan": 50, "Lens": 28,
+    "Athletic Bilbao": 25, "SC Freiburg": 31, "Napoli": 57, "Nice": 24,
+    "Valencia": 27, "Borussia Dortmund": 54, "Juventus": 39, "Strasbourg": 19,
+    "Real Sociedad": 32, "Vfb Stuttgart": 23, "Lazio": 37, "Lille": 26,
+    "Vfb Strasbourg": 19, "Sevilla": 34, "Como": 12, "Vfl Wolfsburg": 29,
+    "Celta Vigo": 20, "Eintract Frankfurt": 35
+  },
+  "divisions": [
+    {
+      "name": "It’s Called Soccer",
+      "teams": [
+        {"manager":"Portillo","clubs":["Real Betis","Mainz 05","Atalanta","Paris Saint Germain"],"record":{"W":8,"D":1,"L":6}},
+        {"manager":"Nick","clubs":["Villarreal","Bayern Munich","AS Roma","Lyon"],"record":{"W":8,"D":5,"L":1}},
+        {"manager":"Tim","clubs":["Barcelona","RB Leipzig","Bologna","Monaco"],"record":{"W":10,"D":2,"L":3}},
+        {"manager":"Dave","clubs":["Real Madrid","FC Koln","Fiorentina","Marseille"],"record":{"W":7,"D":5,"L":3}},
+        {"manager":"Tara","clubs":["Alaves","Bayern Leverkusen","AC Milan","Brest"],"record":{"W":7,"D":1,"L":7}},
+        {"manager":"Chewy","clubs":["Athletico Madrid","Eintracht Frankfurt","Inter Milan","Lens"],"record":{"W":10,"D":2,"L":3}},
+        {"manager":"Dallin","clubs":["Athletic Bilbao","SC Freiburg","Napoli","Nice"],"record":{"W":8,"D":4,"L":3}},
+        {"manager":"Salas","clubs":["Valencia","Borussia Dortmund","Juventus","Strasbourg"],"record":{"W":10,"D":3,"L":2}},
+        {"manager":"Austin","clubs":["Real Sociedad","Vfb Stuttgart","Lazio","Lille"],"record":{"W":8,"D":2,"L":5}}
+      ]
+    },
+    {
+      "name": "It’s Called Football",
+      "teams": [
+        {"manager":"Andy","clubs":["Villarreal","Vfb Strasbourg","Atalanta","Paris Saint Germain"],"record":{"W":9,"D":1,"L":5}},
+        {"manager":"Darwin","clubs":["Sevilla","Bayern Munich","Roma","Strasbourg"],"record":{"W":6,"D":1,"L":8}},
+        {"manager":"Tillah","clubs":["Barcelona","RB Leipzig","Como","Marseille"],"record":{"W":10,"D":1,"L":4}},
+        {"manager":"Layton","clubs":["Athletico Madrid","Bayern Leverkusen","Lazio","Nice"],"record":{"W":7,"D":4,"L":4}},
+        {"manager":"Marcus","clubs":["Real Betis","Vfl Wolfsburg","Napoli","Monaco"],"record":{"W":10,"D":3,"L":2}},
+        {"manager":"Anthony","clubs":["Real Madrid","SC Freiburg","AC Milan","Lille"],"record":{"W":6,"D":1,"L":8}},
+        {"manager":"Danvir","clubs":["Athletic Bilbao","Mainz 05","Inter Milan","Brest"],"record":{"W":9,"D":5,"L":1}},
+        {"manager":"Neil","clubs":["Real Sociedad","Borussia Dortmund","Fiorentina","Lyon"],"record":{"W":8,"D":5,"L":2}},
+        {"manager":"Francisco","clubs":["Celta Vigo","Eintract Frankfurt","Juventus","Lens"],"record":{"W":7,"D":5,"L":3}}
+      ]
+    }
+  ]
+};
+
+function render() {
+  const boards = document.getElementById('boards');
+  boards.innerHTML = '';
+  data.divisions.forEach(div => {
+    const board = document.createElement('div');
+    board.className = 'board';
+    const h = document.createElement('h2');
+    h.textContent = div.name;
+    board.appendChild(h);
+
+    const rows = div.teams.map(t => {
+      const clubPoints = t.clubs.map(c => ({name:c, pts: data.leagues_points[c] || 0}));
+      const total = clubPoints.reduce((s,x) => s+x.pts, 0);
+      return {...t, clubPoints, total};
+    });
+
+    rows.sort((a,b) => b.total - a.total);
+
+    const tbl = document.createElement('table');
+    tbl.className = 'table';
+    tbl.innerHTML = `<thead><tr><th>#</th><th>Manager</th><th>Clubs</th><th>Record (W-D-L)</th><th style="text-align:right">Total pts</th></tr></thead>`;
+    const tbody = document.createElement('tbody');
+
+    rows.forEach((r,i) => {
+      const clubsHtml = r.clubPoints.map(cp => `<div class="club">${cp.name} <span class="small">(${cp.pts} pts)</span></div>`).join('');
+      const record = r.record ? `${r.record.W}-${r.record.D}-${r.record.L}` : '-';
+      const tr = document.createElement('tr');
+      tr.innerHTML = `<td>${i+1}</td><td class="manager">${r.manager}</td><td class="club-list">${clubsHtml}</td><td class="record">${record}</td><td class="total">${r.total}</td>`;
+      tbody.appendChild(tr);
+    });
+
+    tbl.appendChild(tbody);
+    board.appendChild(tbl);
+    boards.appendChild(board);
+  });
+}
+
+render();
+</script>
+</body>
+</html>
