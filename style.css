@@ -1,0 +1,92 @@
+:root {
+  --bg: #0f1724;
+  --card: #071033;
+  --accent: #f3b23a;
+  --muted: #94a3b8;
+  color-scheme: dark;
+}
+* {
+  box-sizing: border-box;
+}
+body {
+  font-family: Inter, system-ui, Segoe UI, Roboto, 'Helvetica Neue', Arial;
+  background: linear-gradient(180deg, #071024 0%, #0b1630 100%);
+  color: #e6eef8;
+  margin: 0;
+  padding: 28px;
+}
+header {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-bottom: 18px;
+}
+h1 {
+  margin: 0;
+  font-size: 28px;
+  color: var(--accent);
+}
+.subtitle {
+  margin: 0;
+  color: var(--muted);
+}
+.boards {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 18px;
+}
+.board {
+  background: rgba(255, 255, 255, 0.03);
+  border-radius: 10px;
+  padding: 12px;
+  width: 620px;
+  min-width: 320px;
+}
+.board h2 {
+  margin: 0 0 8px 0;
+}
+.table {
+  width: 100%;
+  border-collapse: collapse;
+}
+.table th,
+.table td {
+  padding: 6px 8px;
+  text-align: left;
+  font-size: 14px;
+}
+.table th {
+  color: var(--muted);
+  font-weight: 600;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+}
+.manager {
+  font-weight: 700;
+}
+.small {
+  font-size: 12px;
+  color: var(--muted);
+}
+.club-list {
+  font-size: 13px;
+  color: #cfe2ff;
+}
+.total {
+  font-weight: 800;
+  text-align: right;
+}
+.record {
+  font-weight: 600;
+  text-align: center;
+  color: #f3b23a;
+}
+.notes {
+  margin-top: 18px;
+  color: var(--muted);
+}
+#notes {
+  margin-top: 20px;
+}
+.club {
+  margin-bottom: 2px;
+}
